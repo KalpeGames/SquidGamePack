@@ -21,7 +21,7 @@ jobs:
 
       - name: Archive repository (excluding certain files)
         run: |
-          zip -r release.zip . -x "*.git*" "node_modules/*" ".editorconfig"
+          zip -r release.zip . -x "*.git*" "node_modules/*" ".editorconfig" "LICENSE"
 
       - name: Push changes to remote
         run: |
