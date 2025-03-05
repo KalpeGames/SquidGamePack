@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Ensure clean working directory
         run: |
@@ -22,6 +24,10 @@ jobs:
           zip -r release.zip . -x "*.git*" "node_modules/*" ".editorconfig"
 
       - name: Push changes to remote
+        env:
+          GIT_AUTH_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
+          git config --global user.name "KalpeGames"
+          git config --global user.email "git@kalpe.games"
           git add -A
-          git diff --cached --quiet || (git commit -m "new pack" && git push --force)
+          git diff --cached --quiet || (git commit -m "new pack" && git push --force "https://${GIT_AUTH_TOKEN}@github.com/KalpeGames/SquidGamePack.git" HEAD:main)
