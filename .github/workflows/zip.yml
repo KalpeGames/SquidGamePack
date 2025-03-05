@@ -2,7 +2,7 @@ name: Create Archive
 on: [push]
 
 permissions:
-  contents: write
+  contents: write  # Grants read and write permissions to repository contents
 
 jobs:
   build:
@@ -11,12 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Pull latest and remove old file from repo
+      - name: Ensure clean working directory
         run: |
-          git config --global user.name "KalpeGames"
-          git config --global user.email "git@kalpe.games"
-          git config pull.rebase false
-          git pull
+          git fetch origin main
+          git reset --hard origin/main
           rm -f release.zip
 
       - name: Archive repository (excluding certain files)
@@ -26,5 +24,4 @@ jobs:
       - name: Push changes to remote
         run: |
           git add -A
-          git commit -m "new pack"
-          git push --force
+          git diff --cached --quiet || (git commit -m "new pack" && git push --force)
